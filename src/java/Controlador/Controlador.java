@@ -104,7 +104,52 @@ public class Controlador extends HttpServlet {
             request.getRequestDispatcher("/empleado.jsp").forward(request, response);
         }
         if (value.equalsIgnoreCase("cliente")) {
-           
+             switch (value2) {
+                case "listar":
+                    ArrayList<Cliente> clientes = cdao.listar();
+                    request.setAttribute("clientes", clientes);
+                    break;
+                case "Agregar":
+                    String dni = request.getParameter("txtDni");
+                    String nombre = request.getParameter("txtNombres");
+                    String direccion = request.getParameter("txtDireccion");
+                    String estado = request.getParameter("txtEstado");
+                    cliente.setDni(dni);
+                    cliente.setNombre(nombre);
+                    cliente.setDireccion(direccion);
+                    cliente.setEstado(estado);
+                    cdao.agregar(cliente);
+                    //out.print("SISISISI");
+                    request.getRequestDispatcher("Controlador?param1=cliente&param2=listar").forward(request, response);
+                    break;
+                case "eliminar":
+                    id = Integer.parseInt(request.getParameter("id"));
+                    cdao.delete(id);
+                    request.getRequestDispatcher("Controlador?param1=cliente&param2=listar").forward(request, response);
+                    break;
+                case "modificar":
+                    id = Integer.parseInt(request.getParameter("id"));
+                    Cliente c = cdao.finById(id);
+                    request.setAttribute("atribCliente", c);
+                    request.getRequestDispatcher("Controlador?param1=cliente&param2=listar").forward(request, response);
+                    //request.getRequestDispatcher("Controlador?param1=empleado&param2=listar").forward(request, response);
+                    break;
+                case "Actualizar":
+                    String dni1 = request.getParameter("txtDni");
+                    String nombre1 = request.getParameter("txtNombres");
+                    String direccion1 = request.getParameter("txtDireccion");
+                    String estado1 = request.getParameter("txtEstado");
+                    cliente.setDni(dni1);
+                    cliente.setNombre(nombre1);
+                    cliente.setDireccion(direccion1);
+                    cliente.setEstado(estado1);
+                    cliente.setId(id);
+                    cdao.actualizar(cliente);
+                    request.getRequestDispatcher("Controlador?param1=cliente&param2=listar").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
             request.getRequestDispatcher("/clientes.jsp").forward(request, response);
         }
         if (value.equalsIgnoreCase("nuevaVenta")) {
